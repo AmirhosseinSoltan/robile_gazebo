@@ -64,20 +64,10 @@ set(dependencies
   sensor_msgs
   tf2
 )
-set(EXEC_NAME "robile_gazebo_platform_controller")
-#add_executable(${EXEC_NAME}
-#    src/KeloDrive.cpp
-#    src/RobilePlatformController.cpp
-#    src/main.cpp
-#)
-#ament_target_dependencies(${EXEC_NAME} ${dependencies})
 
 ################################################################################
 # Install
 ################################################################################
-#install(TARGETS ${EXEC_NAME}
-#  DESTINATION lib/${PROJECT_NAME}
-#)
 install(DIRECTORY config launch
   DESTINATION share/${PROJECT_NAME}/
 )
