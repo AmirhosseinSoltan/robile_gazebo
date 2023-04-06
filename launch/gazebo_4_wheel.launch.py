@@ -77,7 +77,7 @@ def generate_launch_description():
                 [
                     FindPackageShare("robile_description"),
                     "gazebo",
-                    "gazebo_robile.xacro"
+                    "gazebo_robile_laserscanner_camera.xacro"
                 ]
             ),
             " ",
