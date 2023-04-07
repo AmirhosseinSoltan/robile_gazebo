@@ -14,9 +14,8 @@ from launch_ros.descriptions import ParameterValue
 
 
 def generate_launch_description():
-    lc = LaunchContext()
+    # lc = LaunchContext()
     pkg_gazebo_ros = get_package_share_directory('gazebo_ros')
-
 
     use_sim_time = LaunchConfiguration('use_sim_time', default='true')
     namespace = LaunchConfiguration('namespace')
@@ -33,7 +32,7 @@ def generate_launch_description():
         'use_namespace',
         default_value='false',
         description='Whether to apply a namespace to the navigation stack')
-    
+
     declare_use_sim_time_argument = DeclareLaunchArgument(
         'use_sim_time',
         default_value='true',
@@ -44,10 +43,8 @@ def generate_launch_description():
         default_value='True',
         description='Whether to start RVIZ')
 
-
-
     x_pose = LaunchConfiguration('x_pose', default='-2.0')
-    y_pose = LaunchConfiguration('y_pose', default='-0.5')
+    y_pose = LaunchConfiguration('y_pose', default='-3.5')
 
     world = os.path.join(
         get_package_share_directory('turtlebot3_gazebo'),
@@ -94,27 +91,38 @@ def generate_launch_description():
         parameters=[{
                 'use_sim_time': use_sim_time,
                 'robot_description': ParameterValue(robot_description_content, value_type=str)
-            }],
+        }],
     )
 
-    spawn_robot_gazebo_cmd = Node(package=    'gazebo_ros',
-                                  executable= 'spawn_entity.py',
-                                  arguments=  ['-topic', 'robot_description',
-                                               '-entity', 'robile',
-                                              ],
-                                  output=     'screen')
+    joint_state_publisher_cmd = Node(
+        package="joint_state_publisher",
+        executable="joint_state_publisher",
+        name="joint_state_publisher",
+        output="screen",
+    )
+
+    spawn_robot_gazebo_cmd = Node(package='gazebo_ros',
+                                  executable='spawn_entity.py',
+                                  arguments=['-topic', 'robot_description',
+                                             '-entity', 'robile',
+                                             '-x', x_pose,
+                                             '-y', y_pose,
+                                             ],
+                                  output='screen')
 
     rviz_cmd = Node(package='rviz2',
                     namespace='',
                     executable='rviz2',
-                    name='rviz2'
-    )
+                    name='rviz2',
+                    output='screen',
+                    )
 
     static_transform_cmd = Node(package="tf2_ros",
-            executable="static_transform_publisher",
-            output="screen",
-            arguments=["0","0","0","0","0","0","base_footprint","base_link"]
-    )
+                                executable="static_transform_publisher",
+                                output="screen",
+                                arguments=["0", "0", "0", "0", "0",
+                                           "0", "base_footprint", "base_link"]
+                                )
 
     nodes = [
         rviz_cmd,
@@ -122,21 +130,21 @@ def generate_launch_description():
         gzclient_cmd,
         robot_state_pub_cmd,
         spawn_robot_gazebo_cmd,
-        static_transform_cmd
+        static_transform_cmd,
+        joint_state_publisher_cmd
     ]
 
     return LaunchDescription(nodes)
 
-    #urdf_path = os.path.join(
+    # urdf_path = os.path.join(
     #    get_package_share_directory('robile_description'),
     #    'robots',
     #    urdf_file_name)
 
-    #with open(urdf_path, 'r') as infp:
+    # with open(urdf_path, 'r') as infp:
     #    robot_desc = infp.read()
 
-
-    #return LaunchDescription([
+    # return LaunchDescription([
     #    DeclareLaunchArgument(
     #        'use_sim_time',
     #        default_value='false',
@@ -152,4 +160,4 @@ def generate_launch_description():
     #            'robot_description': robot_desc
     #        }],
     #    ),
-    #])
+    # ])
