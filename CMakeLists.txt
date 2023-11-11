@@ -68,7 +68,7 @@ set(dependencies
 ################################################################################
 # Install
 ################################################################################
-install(DIRECTORY config launch
+install(DIRECTORY config launch worlds
   DESTINATION share/${PROJECT_NAME}/
 )
 
